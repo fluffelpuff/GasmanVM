@@ -40,6 +40,8 @@ func main() {
 	}
 	defer image_file.Close()
 
+	// Es wird geprüft ob das Image ein Filesystem Image benötigt
+
 	// Die VM wird erzeugt
 	vm, err := NewRuntime(image_file)
 	if err != nil {

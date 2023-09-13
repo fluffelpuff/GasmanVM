@@ -15,16 +15,20 @@ type DomainEntry struct {
 type FileEntry struct {
 	ScripteType    string
 	scriptDataLink *zip.File
+	CRC32          uint32
 }
 
 type FilePlayground struct {
-	Path       string `json:"path"`
-	Playground string `json:"playground"`
+	Path       string
+	Playground string
+	Hash       string
+	CRC32      uint32
 }
 
 type Manifest struct {
-	MainFile        string            `json:"main"`
-	FilePlaygrounds []*FilePlayground `json:"file_playground"`
+	MainFile    string `xml:"main,attr"`
+	Rights      Rights `xml:"rights"`
+	SourceFiles Files  `xml:"files"`
 }
 
 type METAINF struct {
@@ -35,4 +39,28 @@ type METAINF struct {
 type OptInOptions struct {
 	Certs   []*x509.Certificate
 	Domains []*DomainEntry
+}
+
+type Right struct {
+	Name string `xml:"name,attr"`
+}
+
+type Rights struct {
+	Rights []Right `xml:"right"`
+}
+
+type File struct {
+	Path       string `xml:"path,attr"`
+	Playground string `xml:"playground,attr"`
+	Hash       string `xml:"hash,attr"`
+}
+
+type Files struct {
+	Files []File `xml:"file"`
+}
+
+type Data struct {
+	Main           string `xml:"main,attr"`
+	Rights         Rights `xml:"rights"`
+	FilePlayground Files  `xml:"files"`
 }

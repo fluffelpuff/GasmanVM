@@ -71,7 +71,7 @@ func (o *JSEngine) runtimeRequire(call goja.FunctionCall, jsruntime *goja.Runtim
 			return o.loadWebsocketModule(jsruntime)
 		case "apisockets": // Stellt API Socket Funktionen bereit
 			return o.loadAPISocketsModule(jsruntime)
-		case "ssh_client": // Stellt SSH-Client Funktionen bereit
+		case "ssh": // Stellt SSH-Client Funktionen bereit
 			return o.loadSSHClientModule(jsruntime)
 		case "ipc": // Stellt IPC Funktionen breit
 			return o.loadIPCModule(jsruntime)

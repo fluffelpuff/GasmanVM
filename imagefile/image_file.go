@@ -4,7 +4,6 @@ import (
 	"archive/zip"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/json"
 	"encoding/pem"
 	"encoding/xml"
 	"fmt"
@@ -92,36 +91,63 @@ func LoadImageFile(path string) (*ImageFile, error) {
 
 	// Die Manifest Datei wird eingelesen
 	var manifest Manifest
-	if err := json.Unmarshal(manifestFile, &manifest); err != nil {
+	if err := xml.Unmarshal(manifestFile, &manifest); err != nil {
 		return nil, fmt.Errorf("LoadImageFile: " + err.Error())
 	}
 
-	// Es wird ermittelt ob alle benötigten Dateien vorhanden sind
-	for _, otem := range manifest.FilePlaygrounds {
-		found_file := false
+	// Es wird geprüft ob es für jede Manifestdatei eine Datei in dem Image gibt
+	file_entrys := make(map[string]*FileEntry)
+	for _, otem := range manifest.GetManifestSourceFiles() {
+		// Es wird geprüft ob es sich um einen zulässigen Playground handelt
+		if otem.Playground != "js" && otem.Playground != "xlisp" && otem.Playground != "py" {
+			return nil, fmt.Errorf("LoadImageFile: unkown playground")
+		}
+
+		// Es wird ermittelt ob die Angegebenen Source Dateien vorhanden sind
+		var found_file *FileEntry
 		for _, file := range zipFile.File {
+			// Es wird ermittelt ob es sich um den SRC Ordner handelt
 			if string("src/"+otem.Path) == file.Name {
-				found_file = true
+				// Der Datei Eintrag wird erzeugt
+				found_file = &FileEntry{otem.Playground, file, file.CRC32}
+
+				// Die Datei wird zwischengesepicher
+				file_entrys[file.Name] = found_file
+
+				// Der Vorgang wird abgebrochen
 				break
 			}
 		}
-		if !found_file {
+
+		// Es wird geprüft ob die Datei gefunden wurde
+		if found_file == nil {
 			return nil, fmt.Errorf("LoadImageFile: file not found")
+		}
+
+		// Es wird geprüft ob die CRC32 der Datei korrekt ist
+		if found_file.CRC32 != otem.CRC32 {
+			return nil, fmt.Errorf("LoadImageFile: invalid crc32 for " + otem.Path)
 		}
 	}
 
-	// Es wird ermittelt ob die Datei Hashes korrekt sind
-	file_entrys := make(map[string]*FileEntry)
+	// Es wird ermittelt ob es für jede Datei im SRC Ordner einen eintrag in dem Manifest gibt
 	for _, otem := range zipFile.File {
+		// Es wird geprüft ob es sich um den SRC Ordner handelt
 		if strings.HasPrefix(otem.Name, "src/") {
+			// Die Datei wird der Manifest Datei herausgesucht
 			found_file := false
-			for _, file := range manifest.FilePlaygrounds {
+			for _, file := range manifest.GetManifestSourceFiles() {
+				// Es wird ermittelt ob es sich um die Gewünschte datei handelt
 				if otem.Name == string("src/"+file.Path) {
-					file_entrys[otem.Name] = &FileEntry{file.Playground, otem}
+					// Es wird angegeben dass die Datei gefunden wurde
 					found_file = true
+
+					// Die Schleife wird beendet
 					break
 				}
 			}
+
+			// Es wird geprüft ob die Datei gefunden wurde
 			if !found_file {
 				return nil, fmt.Errorf("LoadImageFile: invalid script ")
 			}

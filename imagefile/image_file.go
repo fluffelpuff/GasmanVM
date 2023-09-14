@@ -62,6 +62,11 @@ func (o *ImageFile) GetMainFile() (*FileEntry, error) {
 	return result, nil
 }
 
+// Gibt an ob das Image ein Filesysten benötigt
+func (o *ImageFile) NeedFileSystem() bool {
+	return false
+}
+
 // Lädt eine Image Datei
 func LoadImageFile(path string) (*ImageFile, error) {
 	// Öffnen Sie die ZIP-Datei

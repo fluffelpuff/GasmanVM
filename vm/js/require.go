@@ -73,8 +73,6 @@ func (o *JSEngine) runtimeRequire(call goja.FunctionCall, jsruntime *goja.Runtim
 			return o.loadAPISocketsModule(jsruntime)
 		case "ssh": // Stellt SSH-Client Funktionen bereit
 			return o.loadSSHClientModule(jsruntime)
-		case "ipc": // Stellt IPC Funktionen breit
-			return o.loadIPCModule(jsruntime)
 		case "bip": // Stellt die Bitcoin Funktionen bereit
 			return o.loadBIPModule(jsruntime)
 		case "sql": // Stellt SQL Funktionen bereit
@@ -91,6 +89,8 @@ func (o *JSEngine) runtimeRequire(call goja.FunctionCall, jsruntime *goja.Runtim
 			return o.loadNostrModule(jsruntime)
 		case "vmrpc": // Stellt die VM RPC Funktionen bereit
 			return o.loadingVMRPCModule(jsruntime)
+		case "bitcoin": // Stellt die Bitcoin / Lightning funktionen bereit
+			return o.loadBitcoinLightningModule(jsruntime)
 		default:
 			return goja.New().NewGoError(fmt.Errorf("unkown import"))
 		}

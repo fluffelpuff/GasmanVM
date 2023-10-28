@@ -4,6 +4,8 @@ import (
 	"archive/zip"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/xml"
+	"os"
 )
 
 type DomainEntry struct {
@@ -12,28 +14,59 @@ type DomainEntry struct {
 	Price  float64 `xml:"price"`
 }
 
-type FileEntry struct {
-	ScripteType    string
-	scriptDataLink *zip.File
-	CRC32          uint32
-}
-
-type FilePlayground struct {
+type ContainerFile struct {
 	Path       string
 	Playground string
 	Hash       string
-	CRC32      uint32
+	Validated  bool
+}
+
+type FileEntry struct {
+	File           *ContainerFile
+	scriptDataLink *zip.File
+}
+
+type ContainerFilesMap struct {
+	files map[string]*ContainerFile
 }
 
 type Manifest struct {
-	MainFile    string `xml:"main,attr"`
-	Rights      Rights `xml:"rights"`
-	SourceFiles Files  `xml:"files"`
+	XMLName     xml.Name     `xml:"manifest"`
+	Package     Package      `xml:"package"`
+	Application Application  `xml:"application"`
+	Domains     Domains      `xml:"domains"`
+	Permissions []Permission `xml:"permission"`
 }
 
-type METAINF struct {
-	packageSig     []byte
-	packageCreator *tls.Certificate
+type Package struct {
+	GasmanVmPackage string `xml:"gasmanvm-package,attr"`
+	GasmanVmVersion string `xml:"gasmanvm-version,attr"`
+	GasmanVmGit     string `xml:"gasmanvm-git,attr"`
+}
+
+type Application struct {
+	GasmanVmFilesysimage string `xml:"gasmanvm-filesysimage,attr"`
+	GasmanVmMode         string `xml:"gasmanvm-mode,attr"`
+	GasmanVmAssets       string `xml:"gasmanvm-assets,attr"`
+	GasmanVmSyntic       string `xml:"gasmanvm-syntic,attr"`
+	GasmanVmSource       string `xml:"gasmanvm-source,attr"`
+	GasmanVmSourceMain   string `xml:"gasmanvm-source_main,attr"`
+	GasmanVmDescription  string `xml:"gasmanvm-description,attr"`
+	GasmanVmLabel        string `xml:"gasmanvm-label,attr"`
+	GasmanVmSslstore     string `xml:"gasmanvm-sslstore,attr"`
+}
+
+type Domains struct {
+	Domain []Domain `xml:"domain"`
+}
+
+type Domain struct {
+	GasmanVmHost string `xml:"gasmanvm-host,attr"`
+	Specific     string `xml:"spefic,attr"`
+}
+
+type Permission struct {
+	GasmanVmName string `xml:"gasmanvm-name,attr"`
 }
 
 type OptInOptions struct {
@@ -41,26 +74,18 @@ type OptInOptions struct {
 	Domains []*DomainEntry
 }
 
-type Right struct {
-	Name string `xml:"name,attr"`
+type METAINF struct {
+	PackageSig     []byte
+	PackageCreator *tls.Certificate
 }
 
-type Rights struct {
-	Rights []Right `xml:"right"`
-}
-
-type File struct {
-	Path       string `xml:"path,attr"`
-	Playground string `xml:"playground,attr"`
-	Hash       string `xml:"hash,attr"`
-}
-
-type Files struct {
-	Files []File `xml:"file"`
-}
-
-type Data struct {
-	Main           string `xml:"main,attr"`
-	Rights         Rights `xml:"rights"`
-	FilePlayground Files  `xml:"files"`
+// Stellt das Image Reader dar
+type ImageFileReader struct {
+	optIn    *OptInOptions
+	manifest *Manifest
+	metaInf  *METAINF
+	files    *ContainerFilesMap
+	fileMap  map[string]*zip.File
+	zipObj   *zip.Reader
+	zipFile  *os.File
 }

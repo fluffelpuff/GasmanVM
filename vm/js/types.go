@@ -1,15 +1,14 @@
 package jsengine
 
 import (
+	"sync"
+
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/imagefile"
+	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
 )
 
-type VMInterface interface {
-	GetImageFile() *imagefile.ImageFile
-}
-
 type JSEngine struct {
-	motherVM       VMInterface
+	wg             sync.WaitGroup
+	motherVM       modules.VMInterface
 	jsInterpreters []*goja.Runtime
 }

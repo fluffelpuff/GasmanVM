@@ -5,7 +5,7 @@ import (
 
 	"github.com/dop251/goja"
 	"github.com/fluffelpuff/GasmanVM/fsysfile"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // fsCoreReadDir listet den Inhalt eines Verzeichnisses auf und gibt die Ergebnisse zurück.
@@ -22,7 +22,7 @@ import (
 // Die Funktion ruft das Dateisystem über die Schnittstelle vmengine ab und prüft auf Fehler. Dann wird der Inhalt des Verzeichnisses
 // aufgelistet und die einzelnen Einträge verarbeitet. Jeder Eintrag wird in ein JavaScript-Objekt umgewandelt und in einem Array
 // zwischengespeichert. Das Array wird dann als Ergebnis zurückgegeben. Bei einem Fehler wird ein entsprechender Fehlerwert zurückgegeben.
-func fsCoreReadDir(vmengine modules.VMInterface, jsruntime *goja.Runtime, dirPath string) (goja.Value, error) {
+func fsCoreReadDir(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, dirPath string) (goja.Value, error) {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -92,7 +92,7 @@ func fsCoreReadDir(vmengine modules.VMInterface, jsruntime *goja.Runtime, dirPat
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Verzeichnispfad aus den Argumenten.
 // Anschließend wird die Kernfunktion fsCoreReadDir aufgerufen, um den Verzeichnisinhalt aufzulisten. Wenn ein Fehler auftritt, wird dieser als Panik ausgelöst.
 // Andernfalls gibt die Funktion den aufgelisteten Inhalt als JavaScript-Array zurück.
-func Module_FS_SYNC_readdirSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_readdirSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "readdir", 1)))
@@ -126,7 +126,7 @@ func Module_FS_SYNC_readdirSync(vmengine modules.VMInterface, jsruntime *goja.Ru
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Verzeichnispfad und die Callback-Funktion aus den Argumenten.
 // Anschließend wird die Kernfunktion fsCoreReadDir aufgerufen, um den Verzeichnisinhalt aufzulisten. Je nach Ergebnis wird die Callback-Funktion mit den
 // entsprechenden Parametern aufgerufen, um das Ergebnis zu verarbeiten. Schließlich gibt die Funktion ein Goja-Undefined-Wert zurück.
-func Module_FS_SYNC_readdirCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_readdirCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "readdir", 2)))
@@ -176,7 +176,7 @@ func Module_FS_SYNC_readdirCallback(vmengine modules.VMInterface, jsruntime *goj
 // die asynchrone Verzeichnisauflistung registriert. Der Verzeichnisinhalt wird im Hintergrund aufgelistet, und das Ergebnis wird ermittelt.
 // Bei einem Fehler wird die Ablehnungsfunktion aufgerufen und gibt den Fehler zurück. Bei Erfolg wird die Auflösungsfunktion aufgerufen,
 // um das Ergebnis zurückzugeben. Schließlich gibt die Funktion die Promise zurück, um das Ergebnis der Verzeichnisauflistung asynchron zu verarbeiten.
-func Module_FS_ASYNC_readdirPromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_readdirPromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "readdir", 1)))

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // fsCoreRmDir löscht ein Verzeichnis und gibt das Ergebnis zurück.
@@ -22,7 +22,7 @@ import (
 // Die Funktion ruft das Dateisystem über die Schnittstelle vmengine ab und prüft auf Fehler. Dann wird das zu löschende Verzeichnis
 // anhand des Pfads ermittelt. Anschließend wird das Verzeichnis gelöscht, und bei einem erfolgreichen Vorgang wird ein Goja-Null-Wert
 // als Ergebnis zurückgegeben. Im Falle eines Fehlers wird ein entsprechender Fehlerwert zurückgegeben.
-func fsCoreRmDir(vmengine modules.VMInterface, jsrumtime *goja.Runtime, orig_path string, options interface{}) (goja.Value, error) {
+func fsCoreRmDir(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, orig_path string, options interface{}) (goja.Value, error) {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -57,7 +57,7 @@ func fsCoreRmDir(vmengine modules.VMInterface, jsrumtime *goja.Runtime, orig_pat
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Verzeichnispfad und optionale Parameter aus den Argumenten.
 // Anschließend wird die Kernfunktion fsCoreRmDir aufgerufen, um das Verzeichnis synchron zu löschen. Bei einem Fehler wird dieser als Panik ausgelöst,
 // andernfalls gibt die Funktion ein Goja-Null-Wert zurück, um den erfolgreichen Abschluss des Löschvorgangs darzustellen.
-func Module_FS_SYNC_rmdirSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_rmdirSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "rmdir", 2)))
@@ -90,7 +90,7 @@ func Module_FS_SYNC_rmdirSync(vmengine modules.VMInterface, jsruntime *goja.Runt
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Verzeichnispfad, optionale Parameter und die Callback-Funktion aus den Argumenten.
 // Anschließend wird die Kernfunktion fsCoreRmDir aufgerufen, um das Verzeichnis zu löschen. Je nach Ergebnis wird die Callback-Funktion mit den entsprechenden Parametern aufgerufen, um das Ergebnis zu verarbeiten.
 // Schließlich gibt die Funktion ein Goja-Null-Wert zurück.
-func Module_FS_SYNC_rmdirCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_rmdirCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "rmdir", 3)))
@@ -135,7 +135,7 @@ func Module_FS_SYNC_rmdirCallback(vmengine modules.VMInterface, jsruntime *goja.
 // Löschung des Verzeichnisses registriert. Der Löschvorgang wird im Hintergrund ausgeführt, und das Ergebnis wird ermittelt. Bei einem Fehler wird
 // die Ablehnungsfunktion aufgerufen, um den Fehler zurückzugeben. Bei Erfolg wird die Auflösungsfunktion aufgerufen, um das Ergebnis zurückzugeben.
 // Schließlich gibt die Funktion die Promise zurück, um das Ergebnis des Löschvorgangs asynchron zu verarbeiten.
-func Module_FS_ASYNC_rmdirPromises(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_rmdirPromises(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "rmdir", 2)))

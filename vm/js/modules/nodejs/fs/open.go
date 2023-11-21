@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 func isValidOpenFlag(flag string) bool {
@@ -29,7 +29,7 @@ func isValidOpenFlag(flag string) bool {
 //
 // Die Funktion ruft das Dateisystem von der virtuellen Maschine ab, öffnet die Datei und gibt ihren Inhalt basierend auf
 // der angegebenen Option zurück. Sie gibt den Dateiinhalt als Goja-Wert zurück und meldet einen Fehler, wenn ein Problem auftritt.
-func fsOpenCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, filePath string, flags string) (goja.Value, error) {
+func fsOpenCore(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, filePath string, flags string) (goja.Value, error) {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -69,7 +69,7 @@ func fsOpenCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, filePath 
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Dateipfad und die Dateioptionen.
 // Anschließend wird die Datei synchron geöffnet, und das Ergebnis oder ein Fehler wird zurückgegeben.
-func Module_FS_SYNC_openSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_openSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "openSync", 2)))
@@ -107,7 +107,7 @@ func Module_FS_SYNC_openSync(vmengine modules.VMInterface, jsruntime *goja.Runti
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Dateipfad, die Dateioptionen und die Callback-Funktion.
 // Anschließend wird die Datei synchron geöffnet, und das Ergebnis oder ein Fehler wird an die Callback-Funktion übergeben.
-func Module_FS_SYNC_openCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_openCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "open", 3)))
@@ -164,7 +164,7 @@ func Module_FS_SYNC_openCallback(vmengine modules.VMInterface, jsruntime *goja.R
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Dateipfad und die Dateioptionen.
 // Anschließend wird die Datei asynchron geöffnet, und das Ergebnis oder ein Fehler wird in einer Promise zurückgegeben.
-func Module_FS_ASYNC_openPromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_openPromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "open", 2)))

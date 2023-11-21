@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // Diese Funktion stellt die Top Funktionen bereit
@@ -232,10 +232,34 @@ func (o *JSEngine) getCloserValue() string {
 	return "__vmintravalue:0a4ec9d8dce6bbf33a230c16443a20447bc3a7616d813ab1b1525fb95c1392f7"
 }
 
+// Aktiviert den HyperWait Modus
+func (o *JSEngine) enableHyperWaitMode() {
+	// Der Mutex wird verwendet
+	o.mutex.Lock()
+	defer o.mutex.Unlock()
+
+	// Der Wert wird Aktualisiert, sofern er nicht bereits Aktiviert wurde
+	if !o.hyperWait {
+		// Der Wert wird gesetzt
+		o.hyperWait = true
+
+		// Es wird ein Waiter auf VM ebene hinzugefügt
+		o.motherVM.AddNewRoutine()
+
+		// DEBUG
+		fmt.Println("Hyper waiting is active!")
+	}
+}
+
 // Erstellt eine neue Engine
-func NewEngine(mother_vm modules.VMInterface) (*JSEngine, error) {
+func NewEngine(mother_vm vmpackage.VMInterface) (*JSEngine, error) {
 	// Das Basis Objekt wird erezgut
-	base_bundle_runtime := &JSEngine{motherVM: mother_vm, jsInterpreters: make([]*goja.Runtime, 0), wg: sync.WaitGroup{}}
+	base_bundle_runtime := &JSEngine{
+		motherVM:       mother_vm,
+		jsInterpreters: make([]*goja.Runtime, 0),
+		hyperWait:      false,
+		mutex:          new(sync.Mutex),
+	}
 
 	// Die Daten werden zurückgegeben
 	return base_bundle_runtime, nil

@@ -1,15 +1,9 @@
 package coreservice
 
 import (
-	"net"
-
 	"github.com/Microsoft/go-winio"
 	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
-
-type MemoryController struct {
-	serverListener net.Listener
-}
 
 func NewCoreServiceController() (*MemoryController, error) {
 	// Die Windows Pipe wird geöffnet

@@ -2,12 +2,11 @@ package jsengine
 
 import (
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
 	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // Gibt die VM Informationen zurück
-func runtimeVMGetInfo(vmengine modules.VMInterface, jsruntime *goja.Runtime, call goja.FunctionCall) goja.Value {
+func runtimeVMGetInfo(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, call goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob keine Argumente an die Funktion übergeben wurden
 	if len(call.Arguments) != 0 {
 		panic("the function does not require any parameters")
@@ -51,6 +50,23 @@ func (o *JSEngine) getVMModuleFunctions(jsruntime *goja.Runtime) goja.Value {
 	// Diese Funktion wird verwendet um die VM zu beenden
 	err = vmObject.Set("kill", func(call goja.FunctionCall) goja.Value {
 		jsruntime.Interrupt(o.getCloserValue())
+		return goja.Undefined()
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	// Diese Funktion wird verwendet um sicherzustellen das die VM weitläuft, auch wenn das Mainscript durchgelaufen ist
+	err = vmObject.Set("enableHyperWaitMode", func(call goja.FunctionCall) goja.Value {
+		// Es wird ermittelt wieviele Parameter angegeben wurden
+		if len(call.Arguments) != 0 {
+			panic("the 'hyperWait' functio dosen't need parameters")
+		}
+
+		// Der HyperWait Modus wird Aktiviert
+		o.enableHyperWaitMode()
+
+		// Es wird Signalisiert dass der HyperWait Modus Aktiviert werden soll
 		return goja.Undefined()
 	})
 	if err != nil {

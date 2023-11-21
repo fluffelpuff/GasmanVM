@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
-func fsCloseCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, descriptor string) error {
+func fsCloseCore(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, descriptor string) error {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -41,7 +41,7 @@ func fsCloseCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, descript
 //
 // Hinweis:
 // Diese Funktion wird normalerweise nicht direkt aufgerufen, sondern von JavaScript-Code verwendet, um Dateien synchron zu schließen.
-func Module_FS_SYNC_closeSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_closeSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "closeSync", 1)))
@@ -81,7 +81,7 @@ func Module_FS_SYNC_closeSync(vmengine modules.VMInterface, jsruntime *goja.Runt
 //
 // Hinweis:
 // Diese Funktion wird normalerweise nicht direkt aufgerufen, sondern von JavaScript-Code verwendet, um Dateien synchron zu schließen und eine Callback-Funktion aufzurufen.
-func Module_FS_SYNC_closeCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_closeCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "close", 2)))
@@ -139,7 +139,7 @@ func Module_FS_SYNC_closeCallback(vmengine modules.VMInterface, jsruntime *goja.
 //
 // Hinweis:
 // Diese Funktion wird normalerweise nicht direkt aufgerufen, sondern von JavaScript-Code verwendet, um asynchron Dateien zu schließen.
-func Module_FS_ASYNC_closePromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_closePromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "close", 1)))

@@ -8,8 +8,7 @@ import (
 	"github.com/fluffelpuff/GasmanVM/fsysfile"
 	"github.com/fluffelpuff/GasmanVM/imagefile"
 	jsengine "github.com/fluffelpuff/GasmanVM/vm/js"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
-	sharedfunctions "github.com/fluffelpuff/GasmanVM/vm/shared_functions"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 func (o *ScriptContainerVM) Run() error {
@@ -89,40 +88,52 @@ func (o *ScriptContainerVM) SetWindowTitle(windowTitleValue string) error {
 }
 
 func (o *ScriptContainerVM) RegisterLocalSharedFunction(shareName string, groupName string, sharedFunction func(goja.FunctionCall) goja.Value, runtime *goja.Runtime) error {
-	// Die Funktion wird zwischengespeichert
-	o.groupFunctionShares[groupName] = make(map[string]SharedFunctionInterface)
-	o.groupFunctionShares[groupName][shareName] = &sharedfunctions.SharedFunctionCapsle{JsCall: sharedFunction, JsRuntime: runtime}
+	// Die Funktion wird im CoreController Registriert
+	registrationResult, err := o.coreServiceBridgeInterface.RegisterSharedFunction(groupName, shareName, o)
+	if err != nil {
+		return err
+	}
+
+	// Die ID unter welcher die Funktion aufzurufen ist, wird abgespeichert
+	o.functionSharingIdMap[registrationResult.FunctionId] = sharedFunction
+
+	// DEBUG
+	fmt.Printf("New local function share registrated '%s/%s'\n", groupName, shareName)
 
 	// Es ist kein Fehler aufgetreten
 	return nil
 }
 
-func (o *ScriptContainerVM) CallSharedFunction(shareName string, groupName string, parms ...interface{}) (interface{}, error) {
-	// Es wird ermittelt ob die Gruppe vorhanden ist
-	groupResponse, foundGroup := o.groupFunctionShares[groupName]
-	if !foundGroup {
-		return nil, fmt.Errorf("group '%s' not found", groupName)
-	}
+func (o *ScriptContainerVM) RegisterSharedFunction(groupName string, functionName string, functionCallId string, coreBridge vmpackage.CoreServiceBridgeInterface) error {
+	// DEBUG
+	fmt.Println(fmt.Printf("New remote function share registrated '%s/%s'", groupName, functionName))
 
-	// Es wird ermittelt ob die Funktion in der Gruppe vorhanden ist
-	functionResponse, foundFunction := groupResponse[shareName]
-	if !foundFunction {
-		return nil, fmt.Errorf("function '%s' not found", shareName)
-	}
-
-	// Die Funktion wird aufgerufen
-	functionResult, functionErr := functionResponse.Call(parms...)
-	if functionErr != nil {
-		return nil, functionErr
-	}
-
-	// Das Ergebniss wird zurückgegeben
-	return functionResult, nil
+	// Es ist kein Fehler aufgetreten
+	return nil
 }
 
-func NewRuntime(fsContainer *fsysfile.FileSystem, imageFile *imagefile.ImageFileReader, coreController modules.CoreServiceBridgeInterface) (*ScriptContainerVM, error) {
+func (o *ScriptContainerVM) CallSharedFunction(packageIdentifyer vmpackage.PackageIdentifyerInterface, groupName string, functionName string, timeout uint64, parms ...interface{}) (interface{}, error) {
+	// Die Funktion wird aufgerufen
+	functionCallresult, err := o.coreServiceBridgeInterface.CallSharedFunction(packageIdentifyer, groupName, functionName, timeout, parms)
+	if err != nil {
+		return nil, err
+	}
+
+	// DEBUG
+	fmt.Printf("Call shared function '%s/%s' with timeout '%d ms'\n", groupName, functionName, timeout)
+
+	// Das Ergebniss wird zurückgegeben
+	return functionCallresult, nil
+}
+
+func NewRuntime(fsContainer *fsysfile.FileSystem, imageFile *imagefile.ImageFileReader, coreController vmpackage.CoreServiceBridgeInterface) (*ScriptContainerVM, error) {
 	// Das Basis Objekt wird erezgut
-	base_bundle_runtime := &ScriptContainerVM{new(sync.WaitGroup), fsContainer, imageFile, nil, coreController, make(map[string]map[string]SharedFunctionInterface, 0), false}
+	base_bundle_runtime := &ScriptContainerVM{new(sync.WaitGroup), fsContainer, imageFile, nil, coreController, false, make(map[string]func(goja.FunctionCall) goja.Value)}
+
+	// Die VM wird in dem CoreController Registriert
+	if err := coreController.SetVM(base_bundle_runtime); err != nil {
+		return nil, err
+	}
 
 	// Die Javascript Runtime wird erstellt
 	engine, err := jsengine.NewEngine(base_bundle_runtime)

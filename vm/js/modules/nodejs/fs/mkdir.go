@@ -5,7 +5,7 @@ import (
 	"reflect"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 func validateOptions(options map[string]interface{}) bool {
@@ -42,7 +42,7 @@ func validateOptions(options map[string]interface{}) bool {
 //
 // Die Funktion ruft das Dateisystem von der virtuellen Maschine ab und verwendet es, um das Verzeichnis zu erstellen.
 // Sie gibt ein Goja-Undefined zurück, um den Erfolg anzuzeigen, oder einen Fehler, falls die Erstellung fehlschlägt.
-func fsMkdirCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, folderPath string, options map[string]interface{}) error {
+func fsMkdirCore(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, folderPath string, options map[string]interface{}) error {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -105,7 +105,7 @@ func fsMkdirCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, folderPa
 //   - Ein Wert, der das Ergebnis des Verzeichniserstellungsprozesses enthält.
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist, extrahiert den Verzeichnispfad und erstellt das Verzeichnis synchron. Das Ergebnis wird zurückgegeben.
-func Module_FS_SYNC_mkdirSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_mkdirSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "mkdirSync", 2)))
@@ -149,7 +149,7 @@ func Module_FS_SYNC_mkdirSync(vmengine modules.VMInterface, jsruntime *goja.Runt
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Verzeichnispfad und die Callback-Funktion.
 // Anschließend wird das Verzeichnis synchron erstellt, und die Callback-Funktion wird mit den Ergebnissen aufgerufen.
-func Module_FS_SYNC_mkdirCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_mkdirCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "mkdir", 3)))
@@ -210,7 +210,7 @@ func Module_FS_SYNC_mkdirCallback(vmengine modules.VMInterface, jsruntime *goja.
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Verzeichnispfad.
 // Anschließend wird das Verzeichnis asynchron erstellt, und das Ergebnis oder ein Fehler wird in einer Promise zurückgegeben.
-func Module_FS_ASYNC_mkdirPromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_mkdirPromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "mkdir", 1)))

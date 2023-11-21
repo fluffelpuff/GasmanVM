@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
-func fsSymlinkCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourcePath string, destinationPath string) (goja.Value, error) {
+func fsSymlinkCore(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, sourcePath string, destinationPath string) (goja.Value, error) {
 	return nil, nil
 }
 
@@ -23,7 +23,7 @@ func fsSymlinkCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, source
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert die Quell- und Ziel-Pfade aus den Argumenten.
 // Anschließend erstellt sie synchron einen symbolischen Link zwischen den Pfaden und gibt das Ergebnis oder einen Fehler zurück, falls aufgetreten.
-func Module_FS_SYNC_symlinkSync(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_symlinkSync(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "symlinkSync", 2)))
@@ -57,7 +57,7 @@ func Module_FS_SYNC_symlinkSync(vmengine modules.VMInterface, jsrumtime *goja.Ru
 // Anschließend versucht sie, den symbolischen Link zwischen den Pfaden zu erstellen, und ruft dann die Callback-Funktion auf. Wenn ein Fehler auftritt,
 // wird der Fehler als Argument an die Callback-Funktion übergeben. Bei erfolgreichem Abschluss wird `undefined` als Argument übergeben.
 // Schließlich gibt die Funktion `undefined` zurück, um den Abschluss der Operation zu signalisieren.
-func Module_FS_SYNC_symlinkCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_symlinkCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "symlink", 3)))
@@ -101,7 +101,7 @@ func Module_FS_SYNC_symlinkCallback(vmengine modules.VMInterface, jsruntime *goj
 // um den symbolischen Link asynchron zu erstellen. Die Erstellung wird im Hintergrund ausgeführt, und das Ergebnis wird ermittelt.
 // Bei einem Fehler wird die Ablehnungsfunktion aufgerufen, um den Fehler zurückzugeben. Bei Erfolg wird die Auflösungsfunktion aufgerufen,
 // um das Ergebnis zurückzugeben. Schließlich gibt die Funktion die Promise zurück, um das Ergebnis der symbolischen Link-Erstellung asynchron zu verarbeiten.
-func Module_FS_ASYNC_symlinkPromises(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_symlinkPromises(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "symlink", 2)))

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // fsExistsCore überprüft die Existenz einer Datei oder eines Verzeichnisses im Dateisystem.
@@ -19,7 +19,7 @@ import (
 //   - Im Falle eines Fehlers wird ein Fehlerwert zurückgegeben.
 //
 // Die Funktion ruft das Dateisystem über die vmengine-Schnittstelle auf, sucht die Datei oder das Verzeichnis und gibt true zurück, wenn es existiert, andernfalls false.
-func fsExistsCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, filePath string) (goja.Value, error) {
+func fsExistsCore(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, filePath string) (goja.Value, error) {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -48,7 +48,7 @@ func fsExistsCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, filePat
 //   - Im Falle eines Fehlers wird ein Fehlerwert zurückgegeben.
 //
 // Die Funktion überprüft die Existenz der Datei oder des Ordners im Dateisystem und gibt das Ergebnis zurück.
-func Module_FS_SYNC_existsSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_existsSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "exists", 1)))
@@ -79,7 +79,7 @@ func Module_FS_SYNC_existsSync(vmengine modules.VMInterface, jsruntime *goja.Run
 //   - Die Callback-Funktion wird aufgerufen (falls übergeben), andernfalls wird null zurückgegeben.
 //
 // Die Funktion überprüft die Existenz der Datei oder des Ordners im Dateisystem und gibt das Ergebnis über die Callback-Funktion zurück.
-func Module_FS_SYNC_existsCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_existsCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "exists", 2)))
@@ -120,7 +120,7 @@ func Module_FS_SYNC_existsCallback(vmengine modules.VMInterface, jsruntime *goja
 //
 // Die Funktion extrahiert den Dateipfad aus den übergebenen Parametern, überprüft die Existenz der Datei oder des Ordners im Dateisystem
 // und gibt das Ergebnis über eine Promise zurück.
-func Module_FS_ASYNC_existsPromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_existsPromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "exists", 1)))

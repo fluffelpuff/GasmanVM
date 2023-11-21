@@ -19,6 +19,13 @@ var debugMode bool
 var showInfo bool
 
 func main() {
+	// Es wird versucht die Verbindung mit dem Core Service herzustellen
+	coreControllerBridge, err := coreclientbridge.OpenBridgeConnection()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	// Die Flags werden ausgewertet
 	flag.BoolVar(&disableSigCheck, "disableSigCheck", false, "Beschreibung der Flagge")
 	flag.BoolVar(&showInfo, "showInfoPrint", false, "Beschreibung der Flagge")
@@ -26,14 +33,6 @@ func main() {
 	flag.StringVar(&imageFilePath, "imageFile", "", "Beschreibung der Flagge")
 	flag.BoolVar(&debugMode, "debug", false, "Beschreibung der Flagge")
 	flag.Parse()
-
-	// Es wird versucht die Verbindung mit dem Core Service herzustellen
-	fmt.Println("Connection to CoreService")
-	coreControllerBridge, err := coreclientbridge.OpenBridgeConnection()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
 
 	// Die Erlaubten Modi werden abgerufen
 	allowed_modes := strings.Split(os.Getenv("GASMANVM_ALLOWED_MODES"), ",")
@@ -99,6 +98,12 @@ func main() {
 	// Das Manifest wird abgerufen
 	manifest := image_file.GetManifest()
 
+	// Der CoreController wird Vorbereitet
+	if err := coreControllerBridge.Setup(manifest); err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	// Sollte das Image ein Virtuelles Dateisystem benötigen und sollte keines vorhanden sein, wird der Vorgang abgebrochen
 	var fsSysContainer *fsysfile.FileSystem
 	if manifest.Application.GasmanVmFilesysimage != "" || len(manifest.Application.GasmanVmFilesysimage) != 0 {
@@ -159,6 +164,9 @@ func main() {
 		// F+ge eine Leere Zeile hinzu
 		fmt.Println()
 
+		// Die Gruppen werden angezeigt
+		fmt.Println(manifest.Groups)
+
 		// Es wird auf die Bestätigung durch den Benutzer gewartet
 		if !vm.YesOrNoTextEnter("Are you sure you want to open this package? (yes/No) # ") {
 			fmt.Println("Aborted.")
@@ -169,6 +177,11 @@ func main() {
 	// Die VM wird erzeugt
 	vm, err := vm.NewRuntime(fsSysContainer, image_file, coreControllerBridge)
 	if err != nil {
+		panic(err)
+	}
+
+	// Die Anendung wird bereitgestellt
+	if err := coreControllerBridge.Provide(); err != nil {
 		panic(err)
 	}
 
@@ -200,6 +213,6 @@ func validatePermission(permission_name string) (bool, bool) {
 	case "WIN32UISTREAM":
 		return true, true
 	default:
-		return true, true
+		return false, false
 	}
 }

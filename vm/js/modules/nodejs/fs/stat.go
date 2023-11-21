@@ -5,7 +5,7 @@ import (
 
 	"github.com/dop251/goja"
 	"github.com/fluffelpuff/GasmanVM/fsysfile"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // fsCoreState prüft den Status eines Dateisystems und gibt ein Ergebnis zurück.
@@ -22,7 +22,7 @@ import (
 // Die Funktion nimmt die Schnittstelle vmengine und den Pfad oder die Identifikation des Dateisystems als Parameter entgegen. Sie überprüft
 // den Status des Dateisystems und gibt ein Goja-Undefined-Wert zurück, um den Status anzuzeigen. Falls beim Überprüfen des Status ein Problem
 // auftritt, wird ein entsprechender Fehlerwert zurückgegeben.
-func fsCoreState(vmengine modules.VMInterface, jsrumtime *goja.Runtime, orig_path string) (goja.Value, error) {
+func fsCoreState(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, orig_path string) (goja.Value, error) {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -97,7 +97,7 @@ func fsCoreState(vmengine modules.VMInterface, jsrumtime *goja.Runtime, orig_pat
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den vollständigen Pfad zur Datei oder zum Verzeichnis aus den Argumenten.
 // Anschließend ruft sie die Kernfunktion fsCoreState auf, um Metadaten über die Datei oder das Verzeichnis synchron abzurufen. Bei einem Fehler wird
 // der Fehler als JavaScript-Wert zurückgegeben, ansonsten wird ein JavaScript-Objekt mit den Metadaten zurückgegeben.
-func Module_FS_SYNC_statSync(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_statSync(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "stat", 1)))
@@ -130,7 +130,7 @@ func Module_FS_SYNC_statSync(vmengine modules.VMInterface, jsrumtime *goja.Runti
 // Sie überprüft auch, ob eine gültige Callback-Funktion übergeben wurde. Anschließend ruft sie die Kernfunktion fsCoreState auf, um Metadaten über die Datei oder das Verzeichnis abzurufen.
 // Je nach Ergebnis wird die Callback-Funktion mit den entsprechenden Parametern aufgerufen, um das Ergebnis zu verarbeiten.
 // Schließlich gibt die Funktion ein Goja-Undefined-Wert zurück.
-func Module_FS_SYNC_statCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_statCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "stat", 2)))
@@ -173,7 +173,7 @@ func Module_FS_SYNC_statCallback(vmengine modules.VMInterface, jsruntime *goja.R
 // Abfrage der Metadaten registriert. Die Abfrage wird im Hintergrund ausgeführt, und das Ergebnis wird ermittelt. Bei einem Fehler wird die
 // Ablehnungsfunktion aufgerufen, um den Fehler zurückzugeben. Bei Erfolg wird die Auflösungsfunktion aufgerufen, um das Ergebnis zurückzugeben.
 // Schließlich gibt die Funktion die Promise zurück, um das Ergebnis des Metadatenabrufs asynchron zu verarbeiten.
-func Module_FS_ASYNC_statPromises(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_statPromises(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "stat", 1)))

@@ -36,12 +36,21 @@ type Manifest struct {
 	Application Application  `xml:"application"`
 	Domains     Domains      `xml:"domains"`
 	Permissions []Permission `xml:"permission"`
+	Groups      Groups       `xml:"groups"`
 }
 
 type Package struct {
 	GasmanVmPackage string `xml:"gasmanvm-package,attr"`
 	GasmanVmVersion string `xml:"gasmanvm-version,attr"`
 	GasmanVmGit     string `xml:"gasmanvm-git,attr"`
+}
+
+type Group struct {
+	Certificate string `xml:",innerxml"`
+}
+
+type Groups struct {
+	Groups []Group `xml:"group"`
 }
 
 type Application struct {

@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
-func fsAccessCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, path string, flag interface{}) (goja.Value, error) {
+func fsAccessCore(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, path string, flag interface{}) (goja.Value, error) {
 	return nil, nil
 }
 
-func Module_FS_SYNC_accessSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_accessSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "access", 2)))
@@ -37,7 +37,7 @@ func Module_FS_SYNC_accessSync(vmengine modules.VMInterface, jsruntime *goja.Run
 	return goja.Undefined()
 }
 
-func Module_FS_SYNC_accessCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_accessCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "access", 3)))
@@ -80,7 +80,7 @@ func Module_FS_SYNC_accessCallback(vmengine modules.VMInterface, jsruntime *goja
 	return goja.Null()
 }
 
-func Module_FS_SYNC_accessPromise(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_accessPromise(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "access", 1)))

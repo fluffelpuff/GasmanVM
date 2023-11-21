@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 func extractAppendData(parm goja.Value) ([]byte, error) {
@@ -18,11 +18,11 @@ func extractAppendData(parm goja.Value) ([]byte, error) {
 	return appendData, nil
 }
 
-func fsAppendFileCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, fileName string, appendData []byte) (goja.Value, error) {
+func fsAppendFileCore(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, fileName string, appendData []byte) (goja.Value, error) {
 	return nil, nil
 }
 
-func Module_FS_SYNC_appendFileSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_appendFileSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "appendFile", 2)))
@@ -49,7 +49,7 @@ func Module_FS_SYNC_appendFileSync(vmengine modules.VMInterface, jsruntime *goja
 	return result
 }
 
-func Module_FS_SYNC_appendFileCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_appendFileCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "appendFile", 3)))
@@ -93,7 +93,7 @@ func Module_FS_SYNC_appendFileCallback(vmengine modules.VMInterface, jsruntime *
 	return goja.Null()
 }
 
-func Module_FS_SYNC_appendFilePromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_appendFilePromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "appendFile", 2)))

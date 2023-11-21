@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
-func fsmountimgCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourcePath string) (goja.Value, error) {
+func fsmountimgCore(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, sourcePath string) (goja.Value, error) {
 	return nil, nil
 }
 
@@ -23,7 +23,7 @@ func fsmountimgCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourc
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zum zu mountenden Image.
 // Anschließend versucht sie, das Image zu mounten, und gibt das Ergebnis oder einen Fehler als Goja-Wert zurück.
-func Module_FS_SYNC_mountimgSync(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_mountimgSync(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 1)))
@@ -55,7 +55,7 @@ func Module_FS_SYNC_mountimgSync(vmengine modules.VMInterface, jsrumtime *goja.R
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zum zu mountenden Image und die Callback-Funktion.
 // Anschließend versucht sie, das Image zu mounten, und ruft die Callback-Funktion mit dem Ergebnis oder einem Fehler auf.
 // Schließlich gibt sie `undefined` zurück.
-func Module_FS_SYNC_mountimgCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_mountimgCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 2)))
@@ -96,7 +96,7 @@ func Module_FS_SYNC_mountimgCallback(vmengine modules.VMInterface, jsruntime *go
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zum zu mountenden Image.
 // Anschließend erstellt sie ein neues Promise-Objekt und fügt einen asynchronen Vorgang hinzu, um das Image zu mounten.
 // Das Promise-Objekt enthält das Ergebnis oder einen Fehler, der durch die Promise-Resolving-Funktionen zurückgegeben wird.
-func Module_FS_ASYNC_mountimgPromises(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_mountimgPromises(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 1)))

@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
-func fsmountisoCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourcePath string) (goja.Value, error) {
+func fsmountisoCore(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, sourcePath string) (goja.Value, error) {
 	return nil, nil
 }
 
@@ -23,7 +23,7 @@ func fsmountisoCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourc
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu mountenden ISO-Datei.
 // Anschließend wird die ISO-Datei synchron gemountet und das Ergebnis oder ein Fehler wird sofort zurückgegeben.
-func Module_FS_SYNC_mountisoSync(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_mountisoSync(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 1)))
@@ -54,7 +54,7 @@ func Module_FS_SYNC_mountisoSync(vmengine modules.VMInterface, jsrumtime *goja.R
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu mountenden ISO-Datei und die Callback-Funktion.
 // Anschließend mountet sie die ISO-Datei synchron und gibt das Ergebnis oder einen Fehler über die Callback-Funktion zurück.
-func Module_FS_SYNC_mountisoCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_mountisoCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 2)))
@@ -94,7 +94,7 @@ func Module_FS_SYNC_mountisoCallback(vmengine modules.VMInterface, jsruntime *go
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu mountenden ISO-Datei.
 // Anschließend mountet sie die ISO-Datei asynchron und gibt das Ergebnis als Promise zurück.
-func Module_FS_ASYNC_mountisoPromises(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_mountisoPromises(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 1)))

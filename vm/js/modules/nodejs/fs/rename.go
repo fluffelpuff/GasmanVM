@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // fsCoreRename benennt eine Datei um und gibt das Ergebnis zurück.
@@ -22,7 +22,7 @@ import (
 //
 // Die Funktion ruft das Dateisystem über die Schnittstelle vmengine ab und prüft auf Fehler. Dann wird überprüft, ob die Datei anhand des ursprünglichen Pfads verfügbar ist.
 // Wenn die Datei gefunden wird, wird sie umbenannt. Ein erfolgreicher Vorgang wird durch einen Goja-Null-Wert signalisiert. Im Falle eines Fehlers wird ein entsprechender Fehlerwert zurückgegeben.
-func fsCoreRename(vmengine modules.VMInterface, jsrumtime *goja.Runtime, orig_path string, new_name string) (goja.Value, error) {
+func fsCoreRename(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, orig_path string, new_name string) (goja.Value, error) {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -60,7 +60,7 @@ func fsCoreRename(vmengine modules.VMInterface, jsrumtime *goja.Runtime, orig_pa
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist. Sie extrahiert den Quellpfad der Datei und den neuen Namen
 // aus den übergebenen Argumenten. Die Datei wird synchron umbenannt, und bei einem Fehler wird dieser als Panik ausgelöst. Andernfalls gibt
 // die Funktion ein Goja-Undefined-Wert zurück
-func Module_FS_SYNC_renameSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_renameSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "renameSync", 2)))
@@ -93,7 +93,7 @@ func Module_FS_SYNC_renameSync(vmengine modules.VMInterface, jsruntime *goja.Run
 // aus den übergebenen Argumenten. Außerdem wird eine Callback-Funktion extrahiert. Die Datei wird umbenannt, und das Ergebnis wird überprüft.
 // Wenn ein Fehler auftritt, wird die Callback-Funktion mit dem Fehlerwert aufgerufen. Andernfalls wird die Callback-Funktion ohne Fehler
 // aufgerufen. Schließlich gibt die Funktion ein Goja-Undefined-Wert zurück.
-func Module_FS_SYNC_renameCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_renameCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "readFile", 3)))
@@ -138,7 +138,7 @@ func Module_FS_SYNC_renameCallback(vmengine modules.VMInterface, jsruntime *goja
 // Lesevorgang wird für die asynchrone Umbenennung registriert. Die Datei wird im Hintergrund umbenannt, und das Ergebnis wird ermittelt.
 // Bei einem Fehler wird die Ablehnungsfunktion aufgerufen und ein Fehlerwert zurückgegeben. Bei Erfolg wird die Auflösungsfunktion aufgerufen,
 // um das Ergebnis zurückzugeben. Schließlich gibt die Funktion die Promise zurück, um das Ergebnis der Umbenennung asynchron zu verarbeiten.
-func Module_FS_ASYNC_renamePromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_renamePromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "rename", 2)))

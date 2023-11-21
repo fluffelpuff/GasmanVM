@@ -5,11 +5,11 @@ import (
 	"strings"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // Diese Funktion wird verwendet um eine Datei im allgemeinen zu Laden und einen Goja Wert zurückzugeben
-func fsReadFileCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, filePath string, encoding string) (goja.Value, error) {
+func fsReadFileCore(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, filePath string, encoding string) (goja.Value, error) {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -101,7 +101,7 @@ func fsReadFileCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, fileP
 }
 
 // Diese Funktion wird für das Synchrone Laden einer Datei verwendet
-func Module_FS_SYNC_readFileSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_readFileSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "readFileSync", 2)))
@@ -128,7 +128,7 @@ func Module_FS_SYNC_readFileSync(vmengine modules.VMInterface, jsruntime *goja.R
 }
 
 // Diese Funktion wird für das Synchrone Laden einer Datei verwendet
-func Module_FS_SYNC_readFileCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_readFileCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "readFile", 3)))
@@ -172,7 +172,7 @@ func Module_FS_SYNC_readFileCallback(vmengine modules.VMInterface, jsruntime *go
 }
 
 // Diese Funktion wird für das Asynchrone Laden einer Datei verwendet
-func Module_FS_ASYNC_readFilePromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_readFilePromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "readFile", 2)))

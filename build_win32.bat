@@ -1,7 +1,7 @@
 @echo off
 cd execs
-cd fullvm
-echo Build FullVM
+cd corevm
+echo Build CoreVM
 go build -o ../../build/gsvm.exe
 echo done!
 cd ..

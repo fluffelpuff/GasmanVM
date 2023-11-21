@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
-func fsUtimesCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourcePath string) (goja.Value, error) {
+func fsUtimesCore(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, sourcePath string) (goja.Value, error) {
 	return nil, nil
 }
 
@@ -23,7 +23,7 @@ func fsUtimesCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourceP
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu aktualisierenden Datei oder zum Ordner.
 // Anschließend versucht sie, die Zugriffs- und Modifikationszeiten synchron zu aktualisieren und gibt das Ergebnis oder einen Fehler zurück.
-func Module_FS_SYNC_utimesSync(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_utimesSync(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "utimesSync", 1)))
@@ -54,7 +54,7 @@ func Module_FS_SYNC_utimesSync(vmengine modules.VMInterface, jsrumtime *goja.Run
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu aktualisierenden Datei oder zum Ordner sowie die Callback-Funktion.
 // Anschließend versucht sie, die Zugriffs- und Modifikationszeiten asynchron zu aktualisieren und ruft die Callback-Funktion mit dem Ergebnis oder einem Fehler auf.
-func Module_FS_SYNC_utimesCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_utimesCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "utimes", 2)))
@@ -95,7 +95,7 @@ func Module_FS_SYNC_utimesCallback(vmengine modules.VMInterface, jsruntime *goja
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu aktualisierenden Datei oder zum Ordner.
 // Anschließend erstellt sie ein neues Promise-Objekt und fügt einen asynchronen Vorgang hinzu, um die Zugriffs- und Modifikationszeiten zu aktualisieren.
 // Das Promise-Objekt enthält das Ergebnis oder einen Fehler, der durch die Promise-Resolving-Funktionen zurückgegeben wird.
-func Module_FS_ASYNC_utimesPromises(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_utimesPromises(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "utimes", 1)))

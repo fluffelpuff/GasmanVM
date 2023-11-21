@@ -13,7 +13,7 @@ import (
 // - `data ...interface{}`: Die Eingabedaten für den Funktionsaufruf.
 // - `interface{}`: Das Ergebnis des Funktionsaufrufs, wenn es erfolgreich ist.
 // - `error`: Ein Fehler, der auftritt, wenn die Rückgabe ungültig ist oder ein anderer Fehler auftritt.
-func (o *SharedFunctionCapsle) Call(data ...interface{}) (interface{}, error) {
+func (o *LocalSharedFunctionCapsle) Call(data ...interface{}) (interface{}, error) {
 	// Die Daten werden für Goja vorbereitet.
 	gojaParms := make([]goja.Value, 0)
 	for _, item := range data {
@@ -38,10 +38,10 @@ func (o *SharedFunctionCapsle) Call(data ...interface{}) (interface{}, error) {
 	return exportedResult, nil
 }
 
-func (*SharedFunctionCapsle) ClientFunctionCreator() uint64 {
+func (*LocalSharedFunctionCapsle) ClientFunctionCreator() uint64 {
 	return 0
 }
 
-func (o *SharedFunctionCapsle) IsLocal() bool {
+func (o *LocalSharedFunctionCapsle) IsLocal() bool {
 	return true
 }

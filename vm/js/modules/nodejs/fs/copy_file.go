@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
 // fsCopyFileCore ist eine interne Funktion, die dazu dient, eine Datei von der Quelladresse zur Zieladresse zu kopieren.
@@ -25,7 +25,7 @@ import (
 //
 // Hinweis:
 // Diese Funktion wird normalerweise nicht direkt aufgerufen, sondern von anderen Funktionen wie "Module_FS_SYNC_copyFile" verwendet.
-func fsCopyFileCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, sourcePath string, destinationPath string) error {
+func fsCopyFileCore(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, sourcePath string, destinationPath string) error {
 	// Das Dateisystem wird abgerufen
 	fileSystem := vmengine.GetFilesystem()
 	if fileSystem == nil {
@@ -66,7 +66,7 @@ func fsCopyFileCore(vmengine modules.VMInterface, jsruntime *goja.Runtime, sourc
 //
 //	    console.error("Fehler beim Kopieren der Datei: " + error);
 //	}
-func Module_FS_SYNC_copyFileSync(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_copyFileSync(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "copyFile", 2)))
@@ -118,7 +118,7 @@ func Module_FS_SYNC_copyFileSync(vmengine modules.VMInterface, jsruntime *goja.R
 //	        console.log("Datei erfolgreich kopiert: " + result);
 //	    }
 //	});
-func Module_FS_SYNC_copyFileCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_copyFileCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 3 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "copyFile", 3)))
@@ -189,7 +189,7 @@ func Module_FS_SYNC_copyFileCallback(vmengine modules.VMInterface, jsruntime *go
 //
 //	    // Fehler beim Kopieren, err enthält die Fehlerinformation.
 //	})
-func Module_FS_ASYNC_copyFilePromises(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_copyFilePromises(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "copyFile", 2)))

@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/dop251/goja"
-	"github.com/fluffelpuff/GasmanVM/vm/js/modules"
+	"github.com/fluffelpuff/GasmanVM/vmpackage"
 )
 
-func fsUnlinkCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourcePath string) (goja.Value, error) {
+func fsUnlinkCore(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, sourcePath string) (goja.Value, error) {
 	return nil, nil
 }
 
@@ -23,7 +23,7 @@ func fsUnlinkCore(vmengine modules.VMInterface, jsrumtime *goja.Runtime, sourceP
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu löschenden Datei.
 // Anschließend versucht sie, die Datei synchron zu löschen und gibt das Ergebnis oder einen Fehler zurück.
-func Module_FS_SYNC_unlinkSync(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_unlinkSync(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 1)))
@@ -54,7 +54,7 @@ func Module_FS_SYNC_unlinkSync(vmengine modules.VMInterface, jsrumtime *goja.Run
 //
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu löschenden Datei und die Callback-Funktion.
 // Anschließend versucht sie, die Datei asynchron zu löschen, ruft die Callback-Funktion auf und gibt ein Undefined zurück.
-func Module_FS_SYNC_unlinkCallback(vmengine modules.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_SYNC_unlinkCallback(vmengine vmpackage.VMInterface, jsruntime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 2 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 2)))
@@ -95,7 +95,7 @@ func Module_FS_SYNC_unlinkCallback(vmengine modules.VMInterface, jsruntime *goja
 // Die Funktion überprüft, ob die erforderliche Anzahl von Parametern vorhanden ist und extrahiert den Pfad zur zu löschenden Datei.
 // Anschließend erstellt sie eine neue Promise, registriert einen asynchronen Vorgang, um die Datei zu löschen, und gibt die Promise zurück,
 // die das Ergebnis oder einen Fehler nach Abschluss des Löschvorgangs enthält.
-func Module_FS_ASYNC_unlinkPromises(vmengine modules.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
+func Module_FS_ASYNC_unlinkPromises(vmengine vmpackage.VMInterface, jsrumtime *goja.Runtime, parms goja.FunctionCall) goja.Value {
 	// Es wird geprüft ob die Benötigte Anzahl von Parametern vorhanden ist
 	if len(parms.Arguments) != 1 {
 		panic(goja.New().NewGoError(fmt.Errorf("the function '%s' requires %d parameters", "unlink", 1)))

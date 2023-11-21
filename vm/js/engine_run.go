@@ -80,6 +80,9 @@ func (o *JSEngine) RunMainScript() (goja.Value, error) {
 		}
 	}
 
+	// Es wird gewartet bis die WaitGroup fertig ist
+	o.wg.Wait()
+
 	// Das Ergebniss wird zurückgegeben
 	return result, nil
 }
